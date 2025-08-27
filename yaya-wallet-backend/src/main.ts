@@ -4,14 +4,20 @@ import { AppModule } from './app.module';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  // This line allows your React frontend (on a different port)
-  // to make requests to this backend.
-  app.enableCors();
+  // --- START: PRODUCTION CORS FIX ---
+  const frontendURL = 'https://yayawallettest-2cg5.vercel.app/'; 
 
-  // This line adds a global prefix to all routes.
-  // So, TransactionController's '/transactions' becomes '/api/transactions'.
+  app.enableCors({
+    origin: [
+      'http://localhost:3001', // For local development
+      frontendURL,            // For the deployed application
+    ],
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
+    credentials: true,
+  });
+  // --- END: PRODUCTION CORS FIX ---
+
   app.setGlobalPrefix('api');
-
   await app.listen(3000);
 }
 bootstrap();
