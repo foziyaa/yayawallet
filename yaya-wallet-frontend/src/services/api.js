@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 // The Nest.js backend is running on port 3000 with a default '/api' prefix
-const API_BASE_URL = 'http://localhost:3000/api';
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:3000';
 
 // Create an instance of axios with the base URL pre-configured
 const apiClient = axios.create({
