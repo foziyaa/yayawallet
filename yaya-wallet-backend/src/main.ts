@@ -4,20 +4,16 @@ import { AppModule } from './app.module';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  // --- START: PRODUCTION CORS FIX ---
-  const frontendURL = 'https://yayawallettest-2cg5.vercel.app/'; 
-
-  app.enableCors({
-    origin: [
-      'http://localhost:3001', // For local development
-      frontendURL,            // For the deployed application
-    ],
-    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
-    credentials: true,
-  });
-  // --- END: PRODUCTION CORS FIX ---
+  // --- THE DEFINITIVE CORS FIX ---
+  // By calling enableCors() with no options, we are telling our backend
+  // to allow requests from ANY origin. This is the most robust way
+  // to solve this issue in a deployment environment like Render.
+  app.enableCors();
+  // --- END OF FIX ---
 
   app.setGlobalPrefix('api');
-  await app.listen(3000);
+  
+  // Render provides the PORT as an environment variable
+  await app.listen(process.env.PORT || 3000);
 }
 bootstrap();
